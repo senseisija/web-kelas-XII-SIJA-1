@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta name="google-site-verification" content="XKJ_VX7YCcykkNn1rNbam7eqFX9CIJVtH9L9GSlV87w" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>XII SIJA 1 | SMKN 9 Kota Bekasi | Teknologi & Inovasi</title>
+  <style>
+    /* ============ RESET ============ */
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Inter', 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    }
+
+    /* ============ VARIABEL WARNA ============ */
+    :root {
+      --red-primary: #C1121F;
+      --red-dark:    #8B0000;
+      --red-deep:    #6B0F0F;
+      --red-bright:  #E63946;
+      --red-soft:    #F8D7DA;
+      --white:       #FFFFFF;
+      --off-white:   #FDF6F0;
+      --cream:       #F5E6D3;
+      --black:       #1A1A1A;
+      --black-soft:  #2D2D2D;
+      --gray:        #666;
+
+      --radius:     12px;
+      --radius-lg:  1.8rem;
+      --spacing:    clamp(1rem, 3vw, 2rem);
+      --container:  min(1300px, 94vw);
+    }
+
+    /* ============ BODY ============ */
+    body {
+      background: var(--red-deep);
+      min-height: 100vh;
+      position: relative;
+      color: var(--black);
+      overflow-x: hidden;
+    }
+
+    #bgCanvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      z-index: -2; display: block;
+      background: linear-gradient(135deg, var(--red-deep) 0%, var(--red-dark) 50%, var(--red-primary) 100%);
+    }
+
+    .overlay-merahputih {
+      position: fixed; inset: 0;
+      background: radial-gradient(circle at 20% 40%, rgba(255,255,255,0.06), rgba(0,0,0,0.2));
+      pointer-events: none; z-index: -1;
+    }
+
+    /* ============================================================
+       SPLASH INTERAKTIF — SMOOTH EXIT
+       ============================================================ */
+    .splash-animation {
+      position: fixed; inset: 0;
+      background: linear-gradient(135deg, #6B0F0F 0%, #8B0000 50%, #C1121F 100%);
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      z-index: 9999; gap: 20px; padding: 1rem;
+      transition: opacity 1s cubic-bezier(0.65, 0, 0.35, 1),
+                  transform 1s cubic-bezier(0.65, 0, 0.35, 1),
+                  filter 1s cubic-bezier(0.65, 0, 0.35, 1);
+      overflow: hidden;
+      will-change: opacity, transform, filter;
+    }
+    .splash-animation.hide {
+      opacity: 0;
+      transform: scale(1.15) rotate(-3deg);
+      filter: blur(12px);
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .splash-particle {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+      pointer-events: none; animation: floatUp linear infinite;
+      bottom: 0;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(0) scale(0); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(-110vh) scale(1); opacity: 0; }
+    }
+    .splash-logo-wrap {
+      position: relative;
+      width: clamp(140px, 25vw, 200px);
+      height: clamp(140px, 25vw, 200px);
+      display: grid; place-items: center;
+      animation: logoIntro 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes logoIntro {
+      0%   { transform: scale(0.3) rotate(-180deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .splash-logo img {
+      width: clamp(80px, 15vw, 110px);
+      height: clamp(80px, 15vw, 110px);
+      object-fit: contain; z-index: 3; position: relative;
+      animation: logoPulse 1.8s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(255,255,255,0.8));
+    }
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50%      { transform: scale(1.12) rotate(3deg); }
+    }
+    .splash-ring {
+      position: absolute; border-radius: 50%;
+      border: 3px solid transparent;
+    }
+    .splash-ring--outer {
+      inset: 0; border-top-color: #fff;
+      border-right-color: #F8D7DA;
+      animation: spinCW 1.4s linear infinite;
+    }
+    .splash-ring--inner {
+      inset: 14px; border-bottom-color: #fff;
+      border-left-color: #F8D7DA;
+      animation: spinCCW 1s linear infinite;
+    }
+    @keyframes spinCW  { to { transform: rotate(360deg); } }
+    @keyframes spinCCW { to { transform: rotate(-360deg); } }
+    .splash-orbit {
+      position: absolute; inset: 0;
+      animation: spinCW 3s linear infinite;
+    }
+    .splash-orbit::before {
+      content: ''; position: absolute;
+      top: -5px; left: 50%;
+      width: 10px; height: 10px;
+      background: #fff; border-radius: 50%;
+      box-shadow: 0 0 15px #fff, 0 0 25px #F8D7DA;
+      transform: translateX(-50%);
+    }
+    .splash-text {
+      color: #fff;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+      font-weight: 800; letter-spacing: 3px;
+      text-shadow: 3px 3px 0 #6B0F0F;
+      animation: textSlide 0.8s ease-out 0.2s backwards;
+    }
+    @keyframes textSlide {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .splash-sub {
+      color: #F8D7DA; font-weight: 500;
+      letter-spacing: 2px;
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      text-align: center;
+      animation: textSlide 0.8s ease-out 0.35s backwards;
+    }
+    .splash-progress {
+      width: clamp(220px, 70vw, 360px);
+      height: 8px; background: rgba(255,255,255,0.2);
+      border-radius: 50px; overflow: hidden;
+      position: relative; margin-top: 8px;
+    }
+    .splash-progress__bar {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, #fff, #F8D7DA, #fff);
+      background-size: 200% 100%;
+      border-radius: 50px;
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: shimmer 1.5s linear infinite;
+      box-shadow: 0 0 12px rgba(255,255,255,0.8);
+    }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .splash-status {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 6px;
+      color: #fff; font-weight: 600;
+      letter-spacing: 1px; min-height: 3em;
+    }
+    .splash-percent {
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      font-weight: 800; color: #fff;
+      text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+    .splash-loading-text {
+      color: #F8D7DA;
+      font-size: clamp(0.75rem, 2vw, 0.9rem);
+    }
+    @keyframes fadeText {
+      from { opacity: 0; transform: translateY(5px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .splash-dots {
+      display: flex; gap: 8px; margin-top: 6px;
+    }
+    .splash-dots span {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #fff; animation: dotBounce 1.4s infinite;
+    }
+    .splash-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .splash-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dotBounce {
+      0%, 80%, 100% { transform: scale(0.5); opacity: 0.4; }
+      40%           { transform: scale(1); opacity: 1; }
+    }
+
+    /* ============================================================
+       MAIN CONTAINER — FADE IN SMOOTH
+       ============================================================ */
+    .container {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: var(--spacing);
+      position: relative; z-index: 2;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.9s cubic-bezier(0.65, 0, 0.35, 1),
+                  transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+      will-change: opacity, transform;
+    }
+    .container.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Stagger reveal tiap section */
+    .container.show .hero        { animation: revealUp 0.7s ease-out 0.10s backwards; }
+    .container.show .sija-desc   { animation: revealUp 0.7s ease-out 0.20s backwards; }
+    .container.show .galeri      { animation: revealUp 0.7s ease-out 0.30s backwards; }
+    .container.show .struktur    { animation: revealUp 0.7s ease-out 0.40s backwards; }
+    .container.show .siswa-section { animation: revealUp 0.7s ease-out 0.50s backwards; }
+    .container.show .jadwal-section { animation: revealUp 0.7s ease-out 0.60s backwards; }
+    .container.show .piket-section  { animation: revealUp 0.7s ease-out 0.70s backwards; }
+    .container.show .rating-web  { animation: revealUp 0.7s ease-out 0.80s backwards; }
+    .container.show footer       { animation: revealUp 0.7s ease-out 0.90s backwards; }
+
+    @keyframes revealUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============ HERO ============ */
+    .hero {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg);
+      padding: clamp(1.25rem, 3vw, 2rem);
+      margin-bottom: var(--spacing);
+      box-shadow: 0 25px 40px -15px rgba(0,0,0,0.4);
+      border: 1px solid rgba(193, 18, 31, 0.3);
+    }
+    .hero h1 {
+      font-size: clamp(1.1rem, 3vw, 2rem);
+      display: flex; align-items: center; gap: 12px;
+      flex-wrap: wrap; color: var(--black); line-height: 1.2;
+    }
+    .anthena-icon {
+      background: var(--red-soft);
+      padding: 6px 10px; border-radius: 60px;
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .anthena-icon:hover { transform: scale(1.1) rotate(-5deg); }
+    .anthena-icon img {
+      width: clamp(32px, 6vw, 48px);
+      height: clamp(32px, 6vw, 48px);
+      object-fit: contain;
+    }
+    .hero p {
+      color: var(--gray); margin-top: 0.5rem;
+      font-size: clamp(0.85rem, 2vw, 1rem);
+    }
+    .jam-container {
+      display: flex; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+      margin-top: 1rem; align-items: center;
+    }
+    .live-clock {
+      background: var(--red-primary);
+      padding: 0.6rem 1.5rem; border-radius: 60px;
+      color: #fff; font-weight: 700;
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      box-shadow: 0 6px 14px rgba(193, 18, 31, 0.4);
+    }
+    .tanggal-lengkap {
+      background: var(--off-white);
+      padding: 0.5rem 1.2rem; border-radius: 60px;
+      font-weight: 500; border-left: 4px solid var(--red-primary);
+      font-size: clamp(0.8rem, 2vw, 0.95rem);
+    }
+
+    /* ============ SECTION UMUM ============ */
+    .sija-desc, .galeri, .struktur, .siswa-section, .rating-web, .jadwal-section, .piket-section {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-radius: var(--radius-lg);
+      padding: clamp(1.25rem, 3vw, 2rem);
+      margin-bottom: var(--spacing);
+      border: 1px solid rgba(193, 18, 31, 0.2);
+    }
+    .sija-desc h2, .galeri h2, .struktur h2, .siswa-section h2,
+    .jadwal-section h2, .piket-section h2, .rating-web h3 {
+      color: var(--red-primary);
+      font-size: clamp(1.1rem, 3vw, 1.6rem);
+      margin-bottom: 0.75rem;
+    }
+    .sija-desc p {
+      color: var(--black-soft); line-height: 1.7;
+      font-size: clamp(0.9rem, 2vw, 1rem);
+    }
+
+    /* ============ GALERI ============ */
+    .galeri-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem; margin-top: 1.5rem;
+    }
+    .card-galeri {
+      background: #fff; border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 18px 28px -12px rgba(0,0,0,0.25);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .card-galeri:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 30px 50px -15px rgba(193,18,31,0.4);
+    }
+    .card-galeri img {
+      width: 100%; height: 190px; object-fit: cover;
+      transition: 0.5s; display: block;
+    }
+    .card-galeri:hover img { transform: scale(1.08);}
+    .caption {
+      padding: 1rem; font-weight: 600;
+      background: var(--off-white); color: var(--black);
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      border-top: 3px solid var(--red-primary);
+    }
+
+    /* ============ STRUKTUR CARD ============ */
+    .struktur-grid-v2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .struktur-card-v2 {
+      background: var(--off-white);
+      border-radius: var(--radius);
+      padding: 1.25rem 1rem;
+      text-align: center;
+      border-top: 5px solid var(--red-primary);
+      box-shadow: 0 6px 18px -8px rgba(0,0,0,0.15);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
+    }
+    .struktur-card-v2:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 20px 40px -12px rgba(193,18,31,0.35);
+    }
+    .struktur-card-v2--hero {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, var(--red-dark), var(--red-primary));
+      border-top: none; color: #fff;
+      padding: 1.75rem 1rem;
+    }
+    .struktur-card-v2--hero .struktur-card-v2__role { color: var(--red-soft); }
+    .struktur-card-v2--hero .struktur-card-v2__name { color: #fff; font-size: 1.3rem; }
+    .struktur-card-v2--hero .struktur-card-v2__desc { color: rgba(255,255,255,0.85); }
+
+    .struktur-card-v2__role {
+      color: var(--red-primary);
+      font-size: 0.75rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 2px;
+    }
+    .struktur-card-v2__name {
+      color: var(--black); font-size: 1rem;
+      font-weight: 700; margin-top: 0.5rem;
+    }
+    .struktur-card-v2__desc {
+      color: var(--gray); font-size: 0.8rem; margin-top: 0.25rem;
+    }
+
+    /* ============ JADWAL PER HARI ============ */
+    .jadwal-grid-hari {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+    .jadwal-hari-card {
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.2);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
+      display: flex; flex-direction: column;
+    }
+    .jadwal-hari-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 25px 45px -15px rgba(193,18,31,0.35);
+    }
+    .jadwal-hari-card__head {
+      background: var(--red-primary);
+      color: #fff;
+      padding: 0.9rem 1rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-align: center;
+      font-size: 1rem;
+    }
+    .jadwal-hari-card__list {
+      list-style: none;
+      padding: 0.85rem 1rem;
+      flex: 1;
+    }
+    .jadwal-hari-card__list li {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px dashed #eee;
+      font-size: 0.88rem;
+      align-items: flex-start;
+      transition: background 0.3s, padding-left 0.3s;
+    }
+    .jadwal-hari-card__list li:hover {
+      background: var(--red-soft);
+      padding-left: 0.5rem;
+      border-radius: 6px;
+    }
+    .jadwal-hari-card__list li:last-child { border-bottom: none; }
+    .jadwal-hari-card__list li .jam {
+      color: var(--red-primary);
+      font-weight: 800;
+      font-size: 0.72rem;
+      white-space: nowrap;
+      min-width: 82px;
+      padding-top: 2px;
+    }
+    .jadwal-hari-card__list li .isi {
+      color: var(--black-soft);
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .jadwal-hari-card__list li .isi strong {
+      color: var(--black);
+      font-weight: 700;
+      font-size: 0.92em;
+    }
+    .jadwal-hari-card__list li .isi span {
+      color: var(--gray);
+      font-size: 0.78em;
+      margin-top: 1px;
+    }
+    .jadwal-hari-card__list li.istirahat {
+      background: var(--red-soft);
+      margin: 0 -1rem;
+      padding: 0.55rem 1rem;
+      border-bottom: 1px solid rgba(193,18,31,0.15);
+    }
+    .jadwal-hari-card__list li.istirahat .jam,
+    .jadwal-hari-card__list li.istirahat .isi strong {
+      color: var(--red-dark);
+    }
+
+    /* Kode Guru */
+    .kode-guru-v2 {
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.2);
+      margin-top: 1.5rem;
+    }
+    .kode-guru-v2__head {
+      background: var(--red-primary);
+      color: #fff; padding: 0.85rem;
+      text-align: center; font-weight: 800;
+      letter-spacing: 2px; font-size: 0.95rem;
+    }
+    .kode-guru-v2__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.4rem 1.2rem;
+      padding: 1rem 1.25rem;
+    }
+    .kode-guru-v2__item {
+      display: flex; gap: 0.75rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px dashed #eee;
+      font-size: 0.88rem; align-items: center;
+      transition: transform 0.3s;
+    }
+    .kode-guru-v2__item:hover { transform: translateX(5px); }
+    .kode-guru-v2__item .kode {
+      background: var(--red-soft);
+      color: var(--red-dark);
+      font-weight: 800;
+      min-width: 30px; text-align: center;
+      border-radius: 6px; padding: 2px 0;
+      font-size: 0.8em;
+    }
+    .kode-guru-v2__item .nama {
+      color: var(--black-soft); font-weight: 500;
+    }
+
+    /* ============ PIKET GRID ============ */
+    .piket-grid-v2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .piket-card-v2 {
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 8px 20px -8px rgba(0,0,0,0.15);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
+    }
+    .piket-card-v2:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 22px 45px -15px rgba(193,18,31,0.35);
+    }
+    .piket-card-v2__head {
+      background: var(--red-primary);
+      color: #fff; padding: 0.75rem 1rem;
+      font-weight: 800; text-transform: uppercase;
+      letter-spacing: 2px; text-align: center;
+      font-size: 0.95rem;
+    }
+    .piket-card-v2__list {
+      list-style: none; padding: 0.75rem 1rem;
+    }
+    .piket-card-v2__list li {
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed #eee;
+      display: flex; align-items: center; gap: 0.6rem;
+      color: var(--black-soft); font-size: 0.9rem;
+      transition: padding-left 0.3s, background 0.3s;
+    }
+    .piket-card-v2__list li:hover {
+      padding-left: 0.4rem;
+      background: var(--red-soft);
+      border-radius: 6px;
+    }
+    .piket-card-v2__list li:last-child { border-bottom: none; }
+    .piket-card-v2__list li .num {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--red-soft);
+      color: var(--red-dark);
+      display: grid; place-items: center;
+      font-size: 0.7rem; font-weight: 800;
+      flex-shrink: 0;
+    }
+    .piket-card-v2__list li .k {
+      color: #fff; font-weight: 800;
+      font-size: 0.6rem; padding: 0.15rem 0.5rem;
+      background: var(--red-primary);
+      border-radius: 4px; margin-left: auto;
+      letter-spacing: 1px;
+    }
+
+    /* ============ DAFTAR SISWA ============ */
+    .daftar-siswa {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      max-height: 400px; overflow-y: auto;
+      gap: 0.6rem; margin-top: 1rem; padding-right: 4px;
+    }
+    .siswa-item {
+      background: var(--off-white);
+      padding: 8px 14px; border-radius: 30px;
+      font-weight: 500; transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-size: clamp(0.8rem, 2vw, 0.95rem);
+      border-left: 3px solid var(--red-primary);
+      color: var(--black-soft);
+      cursor: pointer;
+    }
+    .siswa-item:hover {
+      background: var(--red-soft);
+      transform: translateX(8px) scale(1.03);
+      border-left-color: var(--red-dark);
+    }
+    #searchSiswa {
+      width: 100%; padding: 12px 18px;
+      border-radius: 50px;
+      border: 2px solid var(--red-soft);
+      background: #fff;
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      outline: none; transition: border 0.3s, box-shadow 0.3s;
+      margin-top: 0.5rem;
+    }
+    #searchSiswa:focus {
+      border-color: var(--red-primary);
+      box-shadow: 0 0 0 4px rgba(193,18,31,0.1);
+    }
+
+    /* ============ RATING ============ */
+    .emoji-rating {
+      display: flex; justify-content: center;
+      gap: clamp(0.75rem, 3vw, 1.5rem);
+      font-size: clamp(1.8rem, 6vw, 2.4rem);
+      cursor: pointer; margin: 0.8rem 0; flex-wrap: wrap;
+    }
+    .emoji-rating span {
+      transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: grayscale(0.4); user-select: none;
+    }
+    .emoji-rating span.selected,
+    .emoji-rating span:hover {
+      transform: scale(1.4) rotate(-5deg); filter: grayscale(0);
+    }
+    #ratingMessage {
+      text-align: center; color: var(--red-primary);
+      font-weight: 600; min-height: 1.5em;
+      font-size: clamp(0.85rem, 2vw, 1rem);
+    }
+
+    /* ============ FOOTER (PUTIH) ============ */
+    footer {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      color: var(--black-soft);
+      border-radius: var(--radius-lg);
+      padding: clamp(1.5rem, 3vw, 2rem);
+      margin-top: var(--spacing);
+      box-shadow: 0 25px 40px -15px rgba(0,0,0,0.4);
+      border: 1px solid rgba(193, 18, 31, 0.2);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    .footer-grid h4 {
+      color: var(--red-primary);
+      margin-bottom: 0.75rem;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      letter-spacing: 0.5px;
+    }
+    .footer-grid p {
+      color: var(--black-soft);
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
+      line-height: 1.6;
+    }
+    .quick-links a, .social a {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--black-soft);
+      margin: 0.6rem 0; transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      font-size: clamp(0.8rem, 2vw, 0.95rem);
+    }
+    .quick-links a:hover, .social a:hover {
+      color: var(--red-primary); padding-left: 8px;
+      transform: scale(1.03);
+    }
+    .instagram-logo { font-size: 1.2rem; }
+    .copyright {
+      text-align: center; margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(193, 18, 31, 0.2);
+      font-size: clamp(0.7rem, 2vw, 0.85rem);
+      color: var(--gray);
+      letter-spacing: 0.5px;
+    }
+
+    html { scroll-behavior: smooth; }
+    section { scroll-margin-top: 20px; }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 768px) {
+      .container { padding: 1rem; }
+      .hero h1 { font-size: 1.15rem; }
+      .jam-container { flex-direction: column; align-items: stretch; }
+      .live-clock, .tanggal-lengkap { text-align: center; }
+      .galeri-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .daftar-siswa { grid-template-columns: 1fr; }
+      .jadwal-grid-hari { grid-template-columns: 1fr; }
+      .kode-guru-v2__grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .galeri-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 480px) {
+      .kode-guru-v2__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<div class="overlay-merahputih"></div>
+
+<!-- ============ SPLASH ============ -->
+<div id="splashAnim" class="splash-animation">
+  <div id="splashParticles"></div>
+  <div class="splash-logo-wrap">
+    <div class="splash-ring splash-ring--outer"></div>
+    <div class="splash-ring splash-ring--inner"></div>
+    <div class="splash-orbit"></div>
+    <div class="splash-logo">
+      <img src="logo.png" alt="Logo XII SIJA 1" onerror="this.style.display='none'">
+    </div>
+  </div>
+  <div class="splash-text">XII SIJA 1</div>
+  <div class="splash-sub">SMKN 9 KOTA BEKASI</div>
+  <div class="splash-progress"><div class="splash-progress__bar" id="splashBar"></div></div>
+  <div class="splash-status">
+    <div class="splash-percent" id="splashPercent">0%</div>
+    <div class="splash-loading-text" id="splashLoadingText">Menyiapkan...</div>
+  </div>
+  <div class="splash-dots"><span></span><span></span><span></span></div>
+</div>
+
+<!-- ============ MAIN ============ -->
+<div class="container" id="mainContent">
+
+  <!-- HERO -->
+  <div class="hero" id="beranda">
+    <h1>
+      <span class="anthena-icon"><img src="logo.png" alt="Logo" onerror="this.style.display='none'"></span>
+      XII SIJA 1 · SMKN 9 KOTA BEKASI
+    </h1>
+    <p>Sistem Informasi Jaringan & Aplikasi - Generasi Teknologi Masa Depan</p>
+    <div class="jam-container">
+      <div class="live-clock" id="liveClock">🕒 --:--:--</div>
+      <div class="tanggal-lengkap" id="liveDate"></div>
+    </div>
+  </div>
+
+  <!-- SIJA -->
+  <div class="sija-desc" id="tentang">
+    <h2>💻 Apa itu SIJA ?</h2>
+    <p><strong>SIJA (Sistem Informasi Jaringan dan Aplikasi)</strong> adalah kompetensi keahlian yang mempelajari pengembangan perangkat lunak, administrasi jaringan, server, dan integrasi sistem digital. Di SMKN 9 Kota Bekasi, siswa SIJA dibekali keterampilan Pemograman, IoT, dan infrastruktur jaringan. <strong>XII SIJA 1</strong> adalah kelas unggulan dengan semangat inovasi dan kolaborasi teknologi tinggi 🚀.</p>
+  </div>
+
+  <!-- GALERI -->
+  <div class="galeri" id="galeri">
+    <h2>📸 Galeri Kelas XII SIJA 1</h2>
+    <div class="galeri-grid">
+      <div class="card-galeri"><img src="foto bersama.jpeg" alt="kebersamaan" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22><rect width=%22400%22 height=%22200%22 fill=%22%23C1121F%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22white%22 font-size=%2220%22 text-anchor=%22middle%22 dy=%22.3em%22>Foto 1</text></svg>'"><div class="caption">❤️ Foto Bersama XII SIJA 1</div></div>
+      <div class="card-galeri"><img src="Upacara XII SIJA 1.jpeg" alt="Upacara" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22><rect width=%22400%22 height=%22200%22 fill=%22%238B0000%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22white%22 font-size=%2220%22 text-anchor=%22middle%22 dy=%22.3em%22>Foto 2</text></svg>'"><div class="caption">🎓 Upacara Bendera</div></div>
+      <div class="card-galeri"><img src="Hari Batik Nasional.jpeg" alt="Hari Batik" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22><rect width=%22400%22 height=%22200%22 fill=%22%236B0F0F%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22white%22 font-size=%2220%22 text-anchor=%22middle%22 dy=%22.3em%22>Foto 3</text></svg>'"><div class="caption">👔 Hari Batik</div></div>
+      <div class="card-galeri"><img src="Hari Guru.jpeg" alt="Hari Guru" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22><rect width=%22400%22 height=%22200%22 fill=%22%23E63946%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22white%22 font-size=%2220%22 text-anchor=%22middle%22 dy=%22.3em%22>Foto 4</text></svg>'"><div class="caption">👩‍🏫 Hari Guru</div></div>
+    </div>
+  </div>
+
+  <!-- STRUKTUR -->
+  <div class="struktur" id="struktur">
+    <h2>🏛️ Struktur Kelas XII SIJA 1</h2>
+    <div class="struktur-grid-v2">
+      <div class="struktur-card-v2 struktur-card-v2--hero">
+        <div class="struktur-card-v2__role">Wali Kelas</div>
+        <div class="struktur-card-v2__name">Nuraeni, S.Pd.</div>
+        <div class="struktur-card-v2__desc">Pembimbing Kelas XII SIJA 1</div>
+      </div>
+      <div class="struktur-card-v2"><div class="struktur-card-v2__role">Ketua Kelas</div><div class="struktur-card-v2__name">M. Raihan Alzena</div><div class="struktur-card-v2__desc">Koordinator Kelas</div></div>
+      <div class="struktur-card-v2"><div class="struktur-card-v2__role">Wakil Ketua</div><div class="struktur-card-v2__name">Reyvan Putra P.</div><div class="struktur-card-v2__desc">Wakil Koordinator</div></div>
+      <div class="struktur-card-v2"><div class="struktur-card-v2__role">Sekretaris 1</div><div class="struktur-card-v2__name">Naufal Arfi</div><div class="struktur-card-v2__desc">Administrasi Kelas</div></div>
+      <div class="struktur-card-v2"><div class="struktur-card-v2__role">Sekretaris 2</div><div class="struktur-card-v2__name">Adimas Syahyudi</div><div class="struktur-card-v2__desc">Administrasi Kelas</div></div>
+      <div class="struktur-card-v2"><div class="struktur-card-v2__role">Bendahara 1</div><div class="struktur-card-v2__name">Faruq Wafa</div><div class="struktur-card-v2__desc">Keuangan Kelas</div></div>
+      <div class="struktur-card-v2"><div class="struktur-card-v2__role">Bendahara 2</div><div class="struktur-card-v2__name">Rizky Nadir</div><div class="struktur-card-v2__desc">Keuangan Kelas</div></div>
+      <div class="struktur-card-v2"><div class="struktur-card-v2__role">Kebersihan</div><div class="struktur-card-v2__name">Andhika &amp; Fairuz</div><div class="struktur-card-v2__desc">Koordinator Kebersihan</div></div>
+      <div class="struktur-card-v2"><div class="struktur-card-v2__role">Kebersihan</div><div class="struktur-card-v2__name">Alyssa &amp; Haura</div><div class="struktur-card-v2__desc">Koordinator Kebersihan</div></div>
+      <div class="struktur-card-v2"><div class="struktur-card-v2__role">Keamanan</div><div class="struktur-card-v2__name">Virgi &amp; Felyan</div><div class="struktur-card-v2__desc">Koordinator Keamanan</div></div>
+      <div class="struktur-card-v2"><div class="struktur-card-v2__role">Dokumentasi</div><div class="struktur-card-v2__name">Ashril &amp; Aura</div><div class="struktur-card-v2__desc">Dokumentasi Kelas</div></div>
+      <div class="struktur-card-v2"><div class="struktur-card-v2__role">Lomba</div><div class="struktur-card-v2__name">Irwansyah &amp; Ashril</div><div class="struktur-card-v2__desc">Koordinator Lomba</div></div>
+    </div>
+  </div>
+
+  <!-- SISWA -->
+  <div class="siswa-section" id="siswa">
+    <h2>📋 Daftar Siswa (Absen 1-36)</h2>
+    <input type="text" id="searchSiswa" placeholder="🔍 Cari nama atau nomor absen...">
+    <div id="siswaListContainer" class="daftar-siswa"></div>
+  </div>
+
+  <!-- JADWAL MAPEL -->
+  <div class="jadwal-section" id="jadwalMapel">
+    <h2>📅 Jadwal Pelajaran</h2>
+    <div class="jadwal-grid-hari">
+
+      <div class="jadwal-hari-card">
+        <div class="jadwal-hari-card__head">Senin</div>
+        <ul class="jadwal-hari-card__list">
+          <li><span class="jam">07.00 - 07.15</span><span class="isi"><strong>Upacara / Apel</strong></span></li>
+          <li><span class="jam">07.15 - 07.55</span><span class="isi"><strong>KIK</strong><span>Pak Herry (16)</span></span></li>
+          <li><span class="jam">07.55 - 08.35</span><span class="isi"><strong>Sejarah</strong><span>Bu Putri (09)</span></span></li>
+          <li><span class="jam">08.35 - 09.55</span><span class="isi"><strong>Bahasa Inggris</strong><span>Ms Aeni (34)</span></span></li>
+          <li class="istirahat"><span class="jam">09.55 - 10.15</span><span class="isi"><strong>☕ ISTIRAHAT</strong></span></li>
+          <li><span class="jam">10.15 - 11.35</span><span class="isi"><strong>KK SIJA</strong><span>Pak Fajar (02)</span></span></li>
+          <li class="istirahat"><span class="jam">12.15 - 13.00</span><span class="isi"><strong>☕ ISTIRAHAT</strong></span></li>
+          <li><span class="jam">13.00 - 13.40</span><span class="isi"><strong>KK SIJA</strong><span>Pak Fajar (02)</span></span></li>
+          <li><span class="jam">14.20 - 15.00</span><span class="isi"><strong>Bahasa Indonesia</strong><span>Pak Putra (22)</span></span></li>
+        </ul>
+      </div>
+
+      <div class="jadwal-hari-card">
+        <div class="jadwal-hari-card__head">Selasa</div>
+        <ul class="jadwal-hari-card__list">
+          <li><span class="jam">07.00 - 07.15</span><span class="isi"><strong>Tadarus</strong></span></li>
+          <li><span class="jam">07.15 - 07.55</span><span class="isi"><strong>PABP</strong><span>Bu Hani (10)</span></span></li>
+          <li><span class="jam">07.55 - 08.35</span><span class="isi"><strong>Sejarah</strong><span>Bu Putri (09)</span></span></li>
+          <li class="istirahat"><span class="jam">09.55 - 10.15</span><span class="isi"><strong>☕ ISTIRAHAT</strong></span></li>
+          <li><span class="jam">10.15 - 11.35</span><span class="isi"><strong>PP</strong><span>Bu Dwi (29)</span></span></li>
+          <li><span class="jam">11.35 - 12.15</span><span class="isi"><strong>Bahasa Indonesia</strong><span>Pak Putra (22)</span></span></li>
+          <li class="istirahat"><span class="jam">12.15 - 13.00</span><span class="isi"><strong>☕ ISTIRAHAT</strong></span></li>
+          <li><span class="jam">13.00 - 13.40</span><span class="isi"><strong>BK</strong><span>Bu Depita (23)</span></span></li>
+          <li><span class="jam">13.40 - 14.20</span><span class="isi"><strong>PJOK</strong><span>Pak Agung (19)</span></span></li>
+        </ul>
+      </div>
+
+      <div class="jadwal-hari-card">
+        <div class="jadwal-hari-card__head">Rabu</div>
+        <ul class="jadwal-hari-card__list">
+          <li><span class="jam">07.00 - 07.15</span><span class="isi"><strong>Tadarus</strong></span></li>
+          <li><span class="jam">07.15 - 07.55</span><span class="isi"><strong>KK SIJA</strong><span>Pak Aryo (04)</span></span></li>
+          <li><span class="jam">07.55 - 08.35</span><span class="isi"><strong>Matematika</strong><span>Bu Gita (30)</span></span></li>
+          <li class="istirahat"><span class="jam">09.55 - 10.15</span><span class="isi"><strong>☕ ISTIRAHAT</strong></span></li>
+          <li><span class="jam">10.15 - 11.35</span><span class="isi"><strong>KK SIJA</strong><span>Pak Cepi</span></span></li>
+          <li class="istirahat"><span class="jam">12.15 - 13.00</span><span class="isi"><strong>☕ ISTIRAHAT</strong></span></li>
+          <li><span class="jam">13.00 - 13.40</span><span class="isi"><strong>KK SIJA</strong><span>Bu Dian (03)</span></span></li>
+          <li><span class="jam">14.20 - 15.00</span><span class="isi"><strong>KK SIJA</strong><span>Bu Dian (03)</span></span></li>
+        </ul>
+      </div>
+
+      <div class="jadwal-hari-card">
+        <div class="jadwal-hari-card__head">Kamis</div>
+        <ul class="jadwal-hari-card__list">
+          <li><span class="jam">07.00 - 07.15</span><span class="isi"><strong>Tadarus</strong></span></li>
+          <li><span class="jam">07.15 - 07.55</span><span class="isi"><strong>Matematika</strong><span>Bu Gita (30)</span></span></li>
+          <li><span class="jam">07.55 - 08.35</span><span class="isi"><strong>KK SIJA</strong><span>Pak Fajar (02)</span></span></li>
+          <li><span class="jam">08.35 - 09.55</span><span class="isi"><strong>KIK</strong><span>Pak Herry (16)</span></span></li>
+          <li class="istirahat"><span class="jam">09.55 - 10.15</span><span class="isi"><strong>☕ ISTIRAHAT</strong></span></li>
+          <li><span class="jam">10.15 - 11.35</span><span class="isi"><strong>Bahasa Inggris</strong><span>Ms Aeni (34)</span></span></li>
+          <li><span class="jam">11.35 - 12.15</span><span class="isi"><strong>DGMT</strong><span>Pak Ibnu (05)</span></span></li>
+          <li class="istirahat"><span class="jam">12.15 - 13.00</span><span class="isi"><strong>☕ ISTIRAHAT</strong></span></li>
+          <li><span class="jam">13.00 - 13.40</span><span class="isi"><strong>KIK</strong><span>Pak Herry (16)</span></span></li>
+          <li><span class="jam">14.20 - 15.00</span><span class="isi"><strong>KIK</strong><span>Pak Herry (16)</span></span></li>
+        </ul>
+      </div>
+
+      <div class="jadwal-hari-card">
+        <div class="jadwal-hari-card__head">Jumat</div>
+        <ul class="jadwal-hari-card__list">
+          <li><span class="jam">07.00 - 07.15</span><span class="isi"><strong>Jumat Bersih</strong></span></li>
+          <li><span class="jam">07.15 - 07.55</span><span class="isi"><strong>KK SIJA</strong><span>Bu Dian (03)</span></span></li>
+          <li><span class="jam">07.55 - 08.35</span><span class="isi"><strong>DGMT</strong><span>Pak Ibnu (05)</span></span></li>
+          <li class="istirahat"><span class="jam">09.55 - 10.15</span><span class="isi"><strong>☕ ISTIRAHAT</strong></span></li>
+          <li><span class="jam">10.15 - 11.35</span><span class="isi"><strong>DGMT</strong><span>Pak Ibnu (05)</span></span></li>
+          <li><span class="jam">11.35 - 12.15</span><span class="isi"><strong>Bahasa Inggris</strong><span>Ms Aeni (34)</span></span></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="kode-guru-v2">
+      <div class="kode-guru-v2__head">KODE NAMA GURU</div>
+      <div class="kode-guru-v2__grid">
+        <div class="kode-guru-v2__item"><span class="kode">02</span><span class="nama">Pak Fajar</span></div>
+        <div class="kode-guru-v2__item"><span class="kode">19</span><span class="nama">Pak Agung</span></div>
+        <div class="kode-guru-v2__item"><span class="kode">03</span><span class="nama">Bu Dian</span></div>
+        <div class="kode-guru-v2__item"><span class="kode">22</span><span class="nama">Pak Putra</span></div>
+        <div class="kode-guru-v2__item"><span class="kode">04</span><span class="nama">Pak Aryo</span></div>
+        <div class="kode-guru-v2__item"><span class="kode">23</span><span class="nama">Bu Depita</span></div>
+        <div class="kode-guru-v2__item"><span class="kode">05</span><span class="nama">Pak Ibnu</span></div>
+        <div class="kode-guru-v2__item"><span class="kode">29</span><span class="nama">Bu Dwi</span></div>
+        <div class="kode-guru-v2__item"><span class="kode">09</span><span class="nama">Bu Putri</span></div>
+        <div class="kode-guru-v2__item"><span class="kode">30</span><span class="nama">Bu Gita</span></div>
+        <div class="kode-guru-v2__item"><span class="kode">10</span><span class="nama">Bu Hani</span></div>
+        <div class="kode-guru-v2__item"><span class="kode">34</span><span class="nama">Ms Aeni</span></div>
+        <div class="kode-guru-v2__item"><span class="kode">16</span><span class="nama">Pak Herry</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIKET -->
+  <div class="piket-section" id="jadwalPiket">
+    <h2>🧹 Jadwal Piket</h2>
+    <div class="piket-grid-v2">
+      <div class="piket-card-v2"><div class="piket-card-v2__head">Senin</div><ul class="piket-card-v2__list">
+        <li><span class="num">1</span>Alyssa <span class="k">KETUA</span></li><li><span class="num">2</span>Abiezal</li><li><span class="num">3</span>Alpha</li><li><span class="num">4</span>Agung</li><li><span class="num">5</span>Raihan</li><li><span class="num">6</span>Luwi</li><li><span class="num">7</span>Farel A</li><li><span class="num">8</span>Faqin</li>
+      </ul></div>
+      <div class="piket-card-v2"><div class="piket-card-v2__head">Selasa</div><ul class="piket-card-v2__list">
+        <li><span class="num">1</span>Sahra <span class="k">KETUA</span></li><li><span class="num">2</span>Andika</li><li><span class="num">3</span>Bintang F</li><li><span class="num">4</span>Arfi</li><li><span class="num">5</span>Aura</li><li><span class="num">6</span>Fairus</li><li><span class="num">7</span>Farrel M</li>
+      </ul></div>
+      <div class="piket-card-v2"><div class="piket-card-v2__head">Rabu</div><ul class="piket-card-v2__list">
+        <li><span class="num">1</span>Erel <span class="k">KETUA</span></li><li><span class="num">2</span>Adimas</li><li><span class="num">3</span>Rizky A</li><li><span class="num">4</span>Aulia</li><li><span class="num">5</span>Kholis</li><li><span class="num">6</span>Aljabar</li><li><span class="num">7</span>Haura</li>
+      </ul></div>
+      <div class="piket-card-v2"><div class="piket-card-v2__head">Kamis</div><ul class="piket-card-v2__list">
+        <li><span class="num">1</span>Basarif <span class="k">KETUA</span></li><li><span class="num">2</span>Ilham B</li><li><span class="num">3</span>Rafaat</li><li><span class="num">4</span>Ashril</li><li><span class="num">5</span>Virgi</li><li><span class="num">6</span>Shanaz</li><li><span class="num">7</span>Wafa</li>
+      </ul></div>
+      <div class="piket-card-v2"><div class="piket-card-v2__head">Jumat</div><ul class="piket-card-v2__list">
+        <li><span class="num">1</span>Habibi <span class="k">KETUA</span></li><li><span class="num">2</span>Rizky N</li><li><span class="num">3</span>Haikal</li><li><span class="num">4</span>Jevon</li><li><span class="num">5</span>Reyvan</li><li><span class="num">6</span>Irwansyah</li><li><span class="num">7</span>Keysha</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <!-- RATING -->
+  <div class="rating-web" id="rating">
+    <h3>⭐ Rate Website Kelas Kami</h3>
+    <div class="emoji-rating" id="emojiRating">
+      <span data-rate="1">😞</span><span data-rate="2">🙁</span><span data-rate="3">😐</span><span data-rate="4">🙂</span><span data-rate="5">😍</span>
+    </div>
+    <div id="ratingMessage"></div>
+  </div>
+
+  <!-- FOOTER PUTIH -->
+  <footer>
+    <div class="footer-grid">
+      <div><h4>🏫 SMKN 9 KOTA BEKASI</h4><p>Jl. Cikunir Raya Gg.H.Abas RT.01 RW.02, Jakamulya, Bekasi Selatan Kota Bekasi, Jawa Barat</p></div>
+      <div class="quick-links"><h4>⚡ Quick Links</h4>
+        <a data-scroll="beranda">🏠 Beranda</a>
+        <a data-scroll="galeri">📸 Galeri</a>
+        <a data-scroll="struktur">🏛️ Struktur Kelas</a>
+        <a data-scroll="jadwalMapel">📅 Jadwal Pelajaran</a>
+        <a data-scroll="jadwalPiket">🧹 Jadwal Piket</a>
+        <a data-scroll="siswa">📋 Daftar Siswa</a>
+      </div>
+      <div class="social"><h4>📱 Social Networks</h4>
+        <a href="https://instagram.com/smkn9kotabekasi" target="_blank"><span class="instagram-logo">📷</span> Instagram SMKN 9 KOTA BEKASI</a>
+        <a href="https://instagram.com/duabelassija1" target="_blank"><span class="instagram-logo">📸</span> Instagram Kelas XII SIJA 1</a>
+        <a href="https://instagram.com/sideofsija1" target="_blank"><span class="instagram-logo">📸</span> Side of SIJA 1</a>
+      </div>
+    </div>
+    <div class="copyright">Dibuat oleh Basarif Salampessy · 2026 - XII SIJA 1 | SMKN 9 KOTA BEKASI</div>
+  </footer>
+</div>
+
+<script>
+  /* ============ SPLASH — SMOOTH TRANSITION ============ */
+  (function splashLoader() {
+    const splash = document.getElementById('splashAnim');
+    const bar = document.getElementById('splashBar');
+    const percent = document.getElementById('splashPercent');
+    const text = document.getElementById('splashLoadingText');
+    const particlesBox = document.getElementById('splashParticles');
+    const mainContent = document.getElementById('mainContent');
+
+    if (!splash) return;
+
+    // Partikel
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'splash-particle';
+      const size = Math.random() * 6 + 2;
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (Math.random() * 4 + 4) + 's';
+      p.style.animationDelay = (Math.random() * 4) + 's';
+      p.style.opacity = Math.random() * 0.6 + 0.3;
+      particlesBox.appendChild(p);
+    }
+
+    const loadingTexts = [
+      'Menyiapkan...', 'Memuat data kelas...', 'Menyusun struktur...',
+      'Mengambil jadwal...', 'Menyiapkan galeri...', 'Hampir selesai...'
+    ];
+
+    let progress = 0;
+    let textIndex = 0;
+
+    const textInterval = setInterval(() => {
+      textIndex = (textIndex + 1) % loadingTexts.length;
+      text.textContent = loadingTexts[textIndex];
+      text.style.animation = 'none';
+      void text.offsetWidth;
+      text.style.animation = 'fadeText 0.4s ease';
+    }, 500);
+
+    const progressInterval = setInterval(() => {
+      const increment = progress < 70
+        ? Math.random() * 8 + 4
+        : Math.random() * 3 + 1;
+      progress = Math.min(progress + increment, 100);
+      bar.style.width = progress + '%';
+      percent.textContent = Math.floor(progress) + '%';
+
+      if (progress >= 100) {
+        clearInterval(progressInterval);
+        clearInterval(textInterval);
+        text.textContent = '✓ Siap!';
+        percent.textContent = '100%';
+
+        // 🎬 TRANSISI SMOOTH: splash blur-out + main fade-in bareng
+        setTimeout(() => {
+          splash.classList.add('hide');
+          // Tampilkan main content segera biar transisinya overlap (gak kaku)
+          mainContent.classList.add('show');
+          setTimeout(() => splash.remove(), 1100);
+        }, 500);
+      }
+    }, 180);
+  })();
+
+  /* ============ DATA SISWA ============ */
+  const siswa = [
+    "Abiezal Azka Syauqi","Adimas Syahyudi","Ahmad Faqih Hafidz","Alpha Akira Ramadhan","Alyssa Ramadhani","Andika Novansyah",
+    "Ashril Hardiansyah","Aulia Putri","Aura Khoirunnisa Haryanto","Basarif Salampessy","Bintang Felyan Toni Putra","Erel Hamizan Baldwin",
+    "Fairuz Athaillah","Farel Muhamad Rabbani","Farrell Aditya Arganta","Faruq Wafa Alfarisi","Haikal Alfarizky Jatmiko","Haura Ainun Mahya",
+    "Ilham Bintang Mewal","Jevon Tamaro Tamba","Keysha Azzahra","Luwi Arjuna Sakti Kurnianto","M.Habibi","Moh.Agung Putra Chairida",
+    "Muhammad Al Jabar Ramadhan","Muhammad Irwansyah","Muhammad Raihan Alzena","Naufal Arfi","Rafa'at Shastradynata","Reyvan Putra Prasetya",
+    "Rizki Aditya","Rizky Nadir Faadhilah","Sadza Kholis Rayhan","Sahra Laely","Shanaz Azzahra","Virgi Irawan"
+  ];
+
+  function renderSiswa(search = "") {
+    const container = document.getElementById("siswaListContainer");
+    const filtered = siswa.filter((nama, idx) => {
+      const no = (idx+1).toString();
+      return nama.toLowerCase().includes(search.toLowerCase()) || no.includes(search);
+    });
+    container.innerHTML = filtered.map((nama) => {
+      const absen = siswa.indexOf(nama)+1;
+      return `<div class="siswa-item">${absen}. ${nama}</div>`;
+    }).join("");
+  }
+  document.getElementById("searchSiswa")?.addEventListener("input", e => renderSiswa(e.target.value));
+  renderSiswa("");
+
+  /* ============ JAM REALTIME ============ */
+  function updateClock() {
+    const now = new Date();
+    document.getElementById("liveClock").innerHTML = `🕘 ${now.toLocaleTimeString('id-ID')}`;
+    document.getElementById("liveDate").innerHTML = now.toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  }
+  setInterval(updateClock, 1000); updateClock();
+
+  /* ============ RATING EMOJI ============ */
+  const stars = document.querySelectorAll("#emojiRating span");
+  const msgDiv = document.getElementById("ratingMessage");
+  function setRating(val) {
+    localStorage.setItem("ratingSIJA1", val);
+    stars.forEach(s => { if(parseInt(s.dataset.rate) <= val) s.classList.add("selected"); else s.classList.remove("selected"); });
+    const messages = ["😞 Semangat belajar lagi!", "🙁 Akan kami tingkatkan!", "😐 Terima kasih!", "🙂 Happy banget!", "😍 Love you! Makasih banyak!"];
+    msgDiv.innerText = messages[val-1];
+  }
+  const saved = localStorage.getItem("ratingSIJA1");
+  if(saved) setRating(parseInt(saved));
+  stars.forEach(s => s.addEventListener("click", () => setRating(parseInt(s.dataset.rate))));
+
+  /* ============ SMOOTH SCROLL ============ */
+  document.querySelectorAll("[data-scroll]").forEach(link => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const target = document.getElementById(link.getAttribute("data-scroll"));
+      if(target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  /* ============ BACKGROUND CANVAS ============ */
+  const canvas = document.getElementById("bgCanvas");
+  const ctx = canvas.getContext("2d");
+  let width, height, particles = [];
+
+  function resizeCanvas() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    initParticles();
+  }
+
+  function initParticles() {
+    particles = [];
+    const count = Math.min(130, Math.floor(width * height / 7000));
+    for(let i=0;i<count;i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 2.5 + 1,
+        speedX: (Math.random() - 0.5) * 0.6,
+        speedY: (Math.random() - 0.5) * 0.4,
+        color: `rgba(255, 255, 255, ${Math.random() * 0.4 + 0.15})`,
+      });
+    }
+    for(let i=0;i<40;i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 3 + 1.2,
+        speedX: (Math.random() - 0.5) * 0.8,
+        speedY: (Math.random() - 0.5) * 0.5,
+        color: `rgba(248, 215, 218, ${Math.random() * 0.5 + 0.2})`,
+      });
+    }
+  }
+
+  function drawBackground() {
+    if(!ctx) return;
+    ctx.clearRect(0,0,width,height);
+    const grad = ctx.createLinearGradient(0,0,width,height);
+    grad.addColorStop(0, "#6B0F0F");
+    grad.addColorStop(0.5, "#8B0000");
+    grad.addColorStop(1, "#C1121F");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,width,height);
+
+    for(let i=0;i<8;i++) {
+      ctx.beginPath();
+      ctx.strokeStyle = `rgba(255, 255, 255, 0.08)`;
+      ctx.lineWidth = 1.2;
+      ctx.moveTo(0, height * (i/8) + Math.sin(Date.now() * 0.001 + i) * 5);
+      ctx.lineTo(width, height * ((i+0.6)/8) + Math.cos(Date.now() * 0.0008 + i) * 5);
+      ctx.stroke();
+    }
+    for(let p of particles) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+      ctx.fillStyle = p.color;
+      ctx.fill();
+      p.x += p.speedX;
+      p.y += p.speedY;
+      if(p.x < -20) p.x = width+20;
+      if(p.x > width+20) p.x = -20;
+      if(p.y < -20) p.y = height+20;
+      if(p.y > height+20) p.y = -20;
+    }
+    requestAnimationFrame(drawBackground);
+  }
+
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+  drawBackground();
+</script>
+</body>
+</html>
